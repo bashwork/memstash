@@ -1,0 +1,12 @@
+============================================================
+Memstash
+============================================================
+
+Memstash is a memcache server written in scala. Yes I know it
+has been done before, but this is my attempt to learn scala.
+
+------------------------------------------------------------
+The Future
+-----------------------------------------------------------
+
+If I get bored, maybe I can make a redis/beanstalk clone.
