@@ -10,3 +10,8 @@ The Future
 -----------------------------------------------------------
 
 If I get bored, maybe I can make a redis/beanstalk clone.
+
+------------------------------------------------------------
+Using the following
+-----------------------------------------------------------
+https://github.com/victori/smemcached/tree/master/src/com/base
