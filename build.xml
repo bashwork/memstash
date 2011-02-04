@@ -1,4 +1,4 @@
-<project name="mina-time-server" default="jar" basedir=".">
+<project name="memstash" default="jar" basedir=".">
   <description>Build file for memstash</description>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -8,7 +8,7 @@
   <property name="build.dir"  location="build"/>
   <property name="jar.dir"    location="jar"/>
   <property name="lib.dir"    location="lib"/>
-  <property name="main.class" value="org.stash.MinaTimeServer"/>
+  <property name="main.class" value="org.stash.MemStashServer"/>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- define the global classpath -->
