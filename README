@@ -15,3 +15,14 @@ If I get bored, maybe I can make a redis/beanstalk clone.
 Using the following
 -----------------------------------------------------------
 https://github.com/victori/smemcached/tree/master/src/com/base
+
+
+------------------------------------------------------------
+Dependencies
+-----------------------------------------------------------
+
+Dependencies are managed with ivy and the following repositories:
+
+* http://mvnrepository.com/
+* http://repo2.maven.org/maven2/
+

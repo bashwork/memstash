@@ -1,4 +1,4 @@
-<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant" name="memstash" default="jar" basedir=".">
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant" name="memstash" default="package" basedir=".">
   <description>Build file for memstash</description>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -42,7 +42,7 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- build a jar of all the samples -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="jar" depends="compile" description="generate the distribution" >
+  <target name="package" depends="compile" description="generate the distribution" >
     <mkdir dir="${jar.dir}/"/>
     <jar jarfile="${jar.dir}/${ant.project.name}.jar" basedir="${build.dir}">
       <manifest>
@@ -54,7 +54,7 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- run the test server -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="run" depends="jar" description="run the test server">
+  <target name="run" depends="package" description="run the test server">
     <java fork='true' classname="${main.class}">
       <classpath>
         <path refid="classpath"/>
@@ -66,13 +66,13 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- run the unit tests -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="test" depends="jar" description="run the unit tests" >
+  <target name="test" depends="package" description="run the unit tests" >
   </target>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- compile the documentation -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-  <target name="docs" depends="compile" description="build the documentation" >
+  <target name="site" depends="compile" description="build the documentation" >
     <scaladoc packagenames="org.stash.*"
            sourcepath="src"
            excludepackagenames="org.stash.test.*"
