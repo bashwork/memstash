@@ -9,12 +9,14 @@ import org.stash.protocol.StashRequest
 object StashObjectConvert {
 
     /**
-     * @summary An implicit conversion from a StashRequest to a StashObject
-     * @returns An initialized stash object
+     * An implicit conversion from a StashRequest to a StashObject
+     *
+     * @return An initialized stash object
      */
     implicit def fromStashRequest(en: StashRequest) : StashObject = {
-        val result = new StashObject(en.key, en.flags, en.expire, en.size)
-        result.value = en.bytes
+        val result   = new StashObject(en.key, en.flags, en.expire, en.size)
+        result.bytes = en.bytes
+        result.size  = en.size
         result
     }
 }

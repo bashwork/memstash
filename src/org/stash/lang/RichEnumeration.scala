@@ -1,22 +1,21 @@
-/**
- * @note This is supplied in scala 2.8
- */
 package org.stash.lang
 import java.util.Enumeration
 
 /**
- * @summary
+ * @deprecated This is supplied in scala 2.8
  */
 object RichEnumeration {
 
     /**
-     * @summary An implicit conversion from java.util.Enumeration to a RichEnumeration
-     * @returns A scala iterator wrapper
+     * An implicit conversion from java.util.Enumeration to a RichEnumeration
+     *
+     * @return A scala iterator wrapper
      */
     implicit def fromEnumeration[T](en: Enumeration[T]) = new RichEnumeration(en)
 
     /**
-     * @summary A wrapper around java.util.Enumeration to implement Iterator
+     * A wrapper around java.util.Enumeration to implement the scala Iterator
+     * of the supplied type.
      */
     class RichEnumeration[T] (en: Enumeration[T]) extends Iterator[T] {
         def next: T = en.nextElement

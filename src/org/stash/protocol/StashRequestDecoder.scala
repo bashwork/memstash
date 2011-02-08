@@ -22,12 +22,33 @@ class StashRequestDecoder extends MessageDecoderAdapter {
     }
 
     @throws(classOf[Exception])
-    def decode(session:IoSession, request:StashResponse, output:ProtocolDecoderOutput)
+    def decode(session:IoSession, buffer:IoBuffer, output:ProtocolDecoderOutput)
         : MessageDecoderResult = {
 
-        val buffer = IoBuffer.allocate(request.size)
-        buffer.put(request.bytes)
-        buffer.flip
-        if (buffer.capacity > 0) output.write(buffer)
+        var result = MessageDecoderResult.NEED_DATA
+
+        session.getAttribute(identifier) match {
+            case request:StashRequest => {
+                result = MessageDecoderResult.OK
+            }
+            case null => {
+                result = MessageDecoderResult.OK
+            }
+        }
+       
+        buffer.reset 
+        result
+    }
+}
+
+object StashRequestDecoder {
+    val commands = List(
+        "SET", "ADD", "INCR", "DECR",
+        "APPEND", "PREPEND", "REPLACE",
+        "GET", "GETS", "STATS", "DELETE", "CAS",
+        "QUIT", "VERSION", "ERROR", "FLUSH_ALL")
+
+    def parse(line:String):StashRequest = {
+        return new StashRequest("fake", "fake")
     }
 }

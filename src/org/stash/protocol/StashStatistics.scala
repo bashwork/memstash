@@ -5,7 +5,8 @@ import java.io.Serializable
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * @summary A wrapper around the statistics for the server
+ * A wrapper around the statistics that are managed for
+ * the memstach server instance.
  */
 class StashStatistics extends Serializable {
 
@@ -27,12 +28,13 @@ class StashStatistics extends Serializable {
         "bytes_written" -> new AtomicLong(0)
     )
 
-    def get(key:String)                   = guard(key) { _.get() }
+    def all(): Iterator[(String, AtomicLong)]   = statistics.toIterator
+    def get(key:String):Long              = guard(key) { _.get() }
     def set(key:String, value:Long)       = guard(key) { _.getAndSet(value) }
     def increment(key:String, value:Long) = guard(key) { _.addAndGet(value) } 
     def decrement(key:String, value:Long) = guard(key) { _.addAndGet(-value) }
 
-    private def guard(key:String)(action:AtomicLong => Long) = {
+    private def guard(key:String)(action:AtomicLong => Long):Long = {
         statistics.get(key).map { action } getOrElse { -1 }
     }
 }

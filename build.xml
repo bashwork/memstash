@@ -8,6 +8,7 @@
   <property name="build.dir"  location="build"/>
   <property name="jar.dir"    location="jar"/>
   <property name="lib.dir"    location="lib"/>
+  <property name="docs.dir"   location="${build.dir}/docs"/>
   <property name="main.class" value="org.stash.MemStashServer"/>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -73,15 +74,11 @@
   <!-- compile the documentation -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <target name="site" depends="compile" description="build the documentation" >
-    <scaladoc packagenames="org.stash.*"
-           sourcepath="src"
-           excludepackagenames="org.stash.test.*"
-           defaultexcludes="yes"
-           destdir="build/docs">
-      <classpath>
-        <path refid="classpath"/>
-        <path location="${jar.dir}/${ant.project.name}.jar"/>
-      </classpath>
+    <mkdir dir="${docs.dir}" />
+    <scaladoc srcdir="${src.dir}" destdir="${docs.dir}">
+      <classpath refid="classpath" />
+      <src path="${src.dir}" />
+      <include name="**/*.scala" />
     </scaladoc>
   </target>
 
