@@ -3,23 +3,23 @@ package org.stash.protocol
 import java.util.Date
 import org.apache.mina.core.service.IoHandlerAdapter
 import org.apache.mina.core.session.IoSession
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
 
+import org.stash.storage.{StashStorage, StashObject}
 import org.stash.lang.StashSystem
 
 /**
  * @summary
  */
-class StashHandler extends IoHandlerAdapter {
+class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
 
-    private final val Logger logger =
-        LoggerFactory.getLogger(TimeServerHandler.class);
+    private final val logger =
+        LoggerFactory.getLogger(StashHandler getClass)
 
     private val statistic = new StashStatistics()
 
     @throws(classOf[Exception])
-    override def exceptionCaught(session:IoSession, cause:Throwablea =) {
+    override def exceptionCaught(session:IoSession, cause:Throwable) = {
         logger.error(cause.toString());
         session.close(true);
     }
@@ -27,7 +27,7 @@ class StashHandler extends IoHandlerAdapter {
     @throws(classOf[Exception])
     override def messageReceived(session:IoSession, message:Object) = {
         val request = message.asInstanceOf[StashRequest]
-        val response = StashResponse()
+        val response = new StashResponse()
 
         request.command match {
             case "FLUSH_ALL"   => command_flush(response)
@@ -41,7 +41,7 @@ class StashHandler extends IoHandlerAdapter {
             case "QUIT"        => session.close(true)
         }
 
-        session.write(response));
+        session.write(response);
     }
 
     @throws(classOf[Exception])
@@ -58,11 +58,11 @@ class StashHandler extends IoHandlerAdapter {
     }
 
     private def command_version(response: StashResponse) = {
-        response.write("VERSION " + StashSystem.Version)
+        response.write("VERSION " + StashSystem.version)
     }
 
     private def command_flush(response: StashResponse) = {
-        storage.clear()
+        storage.clear
         statistic.increment("cmd_flush", 1)
         response.write("OK")
     }

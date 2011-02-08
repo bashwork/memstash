@@ -8,12 +8,18 @@ import org.apache.mina.filter.codec.demux.MessageEncoder
 /**
  * @summary
  */
-class StashResponseEncoder extends MessageEncoder[StashResponse] {
+class StashRequestEncoder extends MessageEncoder[StashRequest] {
 
+    /**
+     * @summary
+     * @param session
+     * @param request
+     * @param output
+     */
     @throws(classOf[Exception])
-    def encode(session:IoSession, response:StashResponse, output:ProtocolEncoderOutput) = {
-        val buffer = IoBuffer.allocate(response.size)
-        buffer.put(response.bytes)
+    def encode(session:IoSession, request:StashRequest, output:ProtocolEncoderOutput) = {
+        val buffer = IoBuffer.allocate(request.size)
+        buffer.put(request.bytes)
         buffer.flip
         if (buffer.capacity > 0) output.write(buffer)
     }

@@ -1,6 +1,7 @@
 package org.stash;
 
 import java.net.InetSocketAddress;
+import org.apache.mina.core.session.IdleStatus
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
@@ -8,17 +9,15 @@ import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
-/**
- * @summary Top level information about the protocal
- */
-object MemStash { final val version = "0.1" }
+import org.stash.storage.StashStorage
+import org.stash.protocol.{StashCodecFactory, StashHandler}
 
 /**
  * @summary
  */
-class MemStash(val address:String, val port:Int, val threads:Int, val storage:CacheStorage) {
+class MemStashBinary(val address:String, val port:Int, val threads:Int, val storage:StashStorage) {
 
-    private final val acceptor:SocketAcceptor
+    private val acceptor = new NioSocketAcceptor()
 
     def startBlocking = {
         start
@@ -26,8 +25,7 @@ class MemStash(val address:String, val port:Int, val threads:Int, val storage:Ca
     }
 
     def start = {
-        acceptor = new NioSocketAcceptor()
-        acceptor.setBackLog(1000)
+        acceptor.setBacklog(1000)
 
         val chain = acceptor.getFilterChain()
 
@@ -42,7 +40,7 @@ class MemStash(val address:String, val port:Int, val threads:Int, val storage:Ca
         config.setTcpNoDelay(true)
         config.setIdleTime(IdleStatus.BOTH_IDLE, 30)
 
-        acceptor.setHandler(new StashHandler(storage, this));
+        acceptor.setHandler(new StashHandler(storage));
         acceptor.bind(new InetSocketAddress(address, port));
     }
 

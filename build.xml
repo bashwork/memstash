@@ -1,4 +1,4 @@
-<project name="memstash" default="jar" basedir=".">
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant" name="memstash" default="jar" basedir=".">
   <description>Build file for memstash</description>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -17,14 +17,26 @@
     <fileset dir="${lib.dir}" includes="**/*.jar"/>
   </path>
 
+  <taskdef resource="scala/tools/ant/antlib.xml">
+    <classpath refid="classpath"/>
+  </taskdef>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- resolve dependencies -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="resolve" description="retrieve project dependencies" >
+    <setproxy proxyhost="127.0.0.1" proxyport="5865" />
+    <ivy:retrieve pattern="$(lib.dir}/[artifact].[ext]" />
+  </target>
+
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- compiles all the samples -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <target name="compile" description="compiles all the samples" >
     <mkdir dir="${build.dir}" />
-    <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath">
-      <compilerarg value="-Xlint"/>
-    </javac>
+    <scalac srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath">
+      <include name="**/*.scala" />
+    </scalac>
   </target>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -61,16 +73,16 @@
   <!-- compile the documentation -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <target name="docs" depends="compile" description="build the documentation" >
-    <javadoc packagenames="org.stash.*"
+    <scaladoc packagenames="org.stash.*"
            sourcepath="src"
-           excludepackagenames="com.stash.test.*"
+           excludepackagenames="org.stash.test.*"
            defaultexcludes="yes"
            destdir="build/docs">
       <classpath>
         <path refid="classpath"/>
         <path location="${jar.dir}/${ant.project.name}.jar"/>
       </classpath>
-    </javadoc>
+    </scaladoc>
   </target>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
