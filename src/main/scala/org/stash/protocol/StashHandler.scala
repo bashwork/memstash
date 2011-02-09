@@ -164,7 +164,7 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
             case el:StashObject => {
                 request.command match {
                     case "INCR" => el.bytes = int(el.bytes) + int(request.bytes)
-                    case "DECR" => el.bytes = Math.min(0, int(el.bytes) - int(request.bytes))
+                    case "DECR" => el.bytes = math.min(0, int(el.bytes) - int(request.bytes))
                 }
                 storage.put(el)
                 response.write(el.bytes)

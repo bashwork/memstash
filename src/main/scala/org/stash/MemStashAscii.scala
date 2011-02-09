@@ -14,7 +14,7 @@ import org.stash.protocol.{StashCodecFactory, StashHandler}
 
 
 /**
- * @summary
+ * 
  */
 class MemStashAscii(val address:String, val port:Int, val threads:Int, val storage:StashStorage) {
 

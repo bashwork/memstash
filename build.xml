@@ -35,7 +35,8 @@
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <target name="compile" description="compiles all the samples" >
     <mkdir dir="${build.dir}" />
-    <scalac srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath">
+    <scalac srcdir="${src.dir}" destdir="${build.dir}" classpathref="classpath"
+        deprecation="yes" unchecked="yes">
       <include name="**/*.scala" />
     </scalac>
   </target>

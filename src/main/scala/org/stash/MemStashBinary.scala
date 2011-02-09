@@ -13,7 +13,7 @@ import org.stash.storage.StashStorage
 import org.stash.protocol.{StashCodecFactory, StashHandler}
 
 /**
- * @summary
+ *
  */
 class MemStashBinary(val address:String, val port:Int, val threads:Int, val storage:StashStorage) {
 
