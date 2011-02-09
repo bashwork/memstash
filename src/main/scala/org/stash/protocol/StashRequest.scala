@@ -3,15 +3,21 @@ package org.stash.protocol
 import java.io.Serializable
 import java.io.ByteArrayOutputStream
 
-class StashRequest(val command:String, val key: String, val flags:Int, val expire: Int)
-    extends Serializable {
+class StashRequest extends Serializable {
+
     private val buffer:ByteArrayOutputStream = new ByteArrayOutputStream()
 
-    def this(command: String, key: String) = this(command, key, 0, 0)
+    var command:String = "ERROR"
+    var reply:Boolean  = true
+    var flags:Int      = 0x00
+    var key:String     = _
+    var expire:Long    = 0
+    var options:Any    = _
+    var bytes:Array[Byte] = _
 
 
-    def bytes:Array[Byte] = buffer.toByteArray
-    def size:Int = buffer.size
+    //def bytes:Array[Byte] = buffer.toByteArray
+    def size:Int = bytes.size
 
     def write(message:Array[Byte]) = {
         buffer.write(message)

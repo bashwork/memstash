@@ -26,8 +26,8 @@
   <!-- resolve dependencies -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <target name="resolve" description="retrieve project dependencies" >
-    <setproxy proxyhost="127.0.0.1" proxyport="5865" />
-    <ivy:retrieve pattern="$(lib.dir}/[artifact].[ext]" />
+    <!--setproxy proxyhost="127.0.0.1" proxyport="5865" /-->
+    <ivy:retrieve />
   </target>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -47,8 +47,16 @@
   <target name="package" depends="compile" description="generate the distribution" >
     <mkdir dir="${jar.dir}/"/>
     <jar jarfile="${jar.dir}/${ant.project.name}.jar" basedir="${build.dir}">
+
+      <zipfileset src="${lib.dir}/commons-cli-1.2.jar" />
+      <zipfileset src="${lib.dir}/mina-core-2.0.2.jar" />
+      <zipfileset src="${lib.dir}/scala-compiler.jar" />
+      <zipfileset src="${lib.dir}/scala-library.jar" />
+      <zipfileset src="${lib.dir}/slf4j-api-1.6.1.jar" />
+      <zipfileset src="${lib.dir}/slf4j-simple-1.6.1.jar" />
+
       <manifest>
-      
+        <attribute name="Main-Class" value="org.stash.Application" />
       </manifest>
     </jar>
   </target>
@@ -69,6 +77,14 @@
   <!-- run the unit tests -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <target name="test" depends="package" description="run the unit tests" >
+    <taskdef name="scalatest" classname="org.scalatest.tools.ScalaTestAntTask">
+      <classpath refid="classpath"/>
+    </taskdef>
+
+    <scalatest runpath="${jar.dir}/${ant.project.name}.jar">
+      <reporter type="stdout" />
+      <reporter type="file" filename="${build.dir}/test.results" />
+    </scalatest>
   </target>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -92,3 +108,5 @@
   </target>
 
 </project>
+
+

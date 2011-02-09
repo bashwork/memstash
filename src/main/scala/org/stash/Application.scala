@@ -18,8 +18,9 @@ import org.stash.protocol.{StashCodecFactory, StashHandler}
  * - a | address : sets the address to listen on
  * - t | threads : sets the number of threads to use
  */
-object MemStash {
+object Application {
 
+    val Version = "1.0.0"
     private val logger = LoggerFactory.getLogger(this.getClass)
 
     /**
@@ -33,6 +34,7 @@ object MemStash {
 
         results.getOptions.foreach { o:Option =>
           o.getOpt match {
+              case "u" | "udp"      => defaults += ("udp"     -> true)
               case "t" | "threads"  => defaults += ("threads" -> o.getValue())
               case "p" | "port"     => defaults += ("port"    -> o.getValue())
               case "a" | "address"  => defaults += ("address" -> o.getValue())
@@ -61,6 +63,7 @@ object MemStash {
         options.addOption("p", "port", true, "set the port to listen on")
         options.addOption("a", "address", true, "set the address to listen on")
         options.addOption("t", "threads", true, "set the number of threads to use")
+        options.addOption("u", "udp", true, "set to enable the udp interface")
     }
 
     /**
@@ -69,8 +72,9 @@ object MemStash {
      * @return The default options map
      */
     private def createDefaults() = Map[String,Any](
-        "address" -> "127.0.0.1",
+        "address" -> null,
         "port"    -> "11211",
+        "udp"     -> false,
         "threads" -> (StashSystem.cpus + 1)
     )
 
@@ -78,7 +82,7 @@ object MemStash {
      * Helper method to print the current version and exit
      */
     private def printVersion() = {
-        println("Memstash Version " + "1.0.0")
+        println("Memstash Version " + Application.Version)
         exit
     }
 
