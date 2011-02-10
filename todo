@@ -9,3 +9,5 @@
 * ERROR\r\n
 * CLIENT_ERROR <error>\r\n
 * SERVER_ERROR <error>\r\n & close connection
+
+* undercover code coverage

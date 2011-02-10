@@ -6,6 +6,7 @@ import org.apache.mina.core.service.IoHandlerAdapter
 import org.apache.mina.core.session.IoSession
 import org.slf4j.{Logger, LoggerFactory}
 
+import org.stash.Application
 import org.stash.storage.{StashStorage, StashObject}
 import org.stash.lang.StashSystem
 import org.stash.lang.StashObjectConvert._
@@ -58,16 +59,25 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
         statistic.increment("total_connections", 1)
     }
 
+    /**
+     * Handler for the memcache version command
+     */
     private def command_version(response: StashResponse) = {
-        response.write("VERSION " + StashSystem.version)
+        response.write("VERSION " + Application.Version)
     }
 
+    /**
+     * Handler for the memcache flush command
+     */
     private def command_flush(response: StashResponse) = {
         storage.clear
         statistic.increment("cmd_flush", 1)
         response.write("OK")
     }
 
+    /**
+     * Handler for the memcache get keys command
+     */
     private def command_get(request:StashRequest, response: StashResponse) = {
         statistic.increment("cmd_get", 1)
         storage.get(request.key) match {
@@ -84,6 +94,9 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
         }
     }
 
+    /**
+     * Handler for the memcache key set command
+     */
     private def command_set(request:StashRequest, response: StashResponse) = {
         var stored = true
         statistic.increment("cmd_set", 1)
@@ -109,6 +122,9 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
         }
     }
 
+    /**
+     * Handler for the memcache key alter command
+     */
     private def command_alter(request:StashRequest, response: StashResponse) = {
         statistic.increment("cmd_set", 1)
         storage.get(request.key) match {
@@ -140,21 +156,26 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
         }
     }
 
-    /* todo support noreply */
+    /**
+     * Handler for the memcache delete command
+     */
     private def command_delete(request:StashRequest, response: StashResponse) = {
         storage.get(request.key) match {
             case el:StashObject => {
                 statistic.increment("delete_hits", 1)
                 storage.remove(request.key)
-                response.write("DELETED")
+                if (request.reply) response.write("DELETED")
             }
             case null => {
                 statistic.increment("delete_misses", 1)
-                response.write("NOT_FOUND")
+                if (request.reply) response.write("NOT_FOUND")
             }
         }
     }
 
+    /**
+     * Handler for the memcache key increment/decrement commands
+     */
     private def command_increment(request:StashRequest, response: StashResponse) = {
         def int(array:Array[Byte]) = new String(array).toInt
         implicit def _2array(input:Int) = input.toString.getBytes
@@ -173,6 +194,9 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
         }
     }
 
+    /**
+     * Handler for the memcache get statistics command
+     */
     private def command_statistic(response: StashResponse) = {
         def stat(key:String, value:Any) {
             response.write("STAT " + key + " " + value)
@@ -180,7 +204,7 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
         stat("pid", StashSystem.pid)
         stat("uptime", StashSystem.time - statistic.get("uptime"))
         stat("time", StashSystem.time)
-        stat("version", StashSystem.version)
+        stat("version", Application.Version)
         stat("pointer_size", StashSystem.bits)
         statistic.all.foreach { case (k,v) => if (k != "uptime") stat(k, v) }
         response.write("END")

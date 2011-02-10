@@ -1,7 +1,7 @@
 package org.stash.storage
 
 import java.util.concurrent.ConcurrentHashMap
-import org.stash.lang.RichEnumeration._
+import scala.collection.JavaConversions._
 
 /**
  * @summary

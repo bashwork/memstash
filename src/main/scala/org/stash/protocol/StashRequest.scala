@@ -17,7 +17,7 @@ class StashRequest extends Serializable {
 
 
     //def bytes:Array[Byte] = buffer.toByteArray
-    def size:Int = bytes.size
+    def size:Int = if (bytes != null) bytes.size else 0
 
     def write(message:Array[Byte]) = {
         buffer.write(message)

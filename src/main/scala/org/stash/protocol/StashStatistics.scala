@@ -28,7 +28,7 @@ class StashStatistics extends Serializable {
         "bytes_written" -> new AtomicLong(0)
     )
 
-    def all(): Iterator[(String, AtomicLong)]   = statistics.toIterator
+    def all(): Iterator[(String, Long)]   = statistics.toIterator.map { case(k,v) => (k,v.get) }
     def get(key:String):Long              = guard(key) { _.get() }
     def set(key:String, value:Long)       = guard(key) { _.getAndSet(value) }
     def increment(key:String, value:Long) = guard(key) { _.addAndGet(value) } 
