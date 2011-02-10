@@ -2,7 +2,6 @@
 * tcp/udp protocol
 * binary/ascii protocol
 * actors
-* scalatest tests
 * valid key -> 250 characters, no control or whitespace
 * max expire time is 60*60*24*30, otherwise is seconds since unit epoch
 
