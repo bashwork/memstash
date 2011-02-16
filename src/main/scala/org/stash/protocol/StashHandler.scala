@@ -12,7 +12,9 @@ import org.stash.lang.StashSystem
 import org.stash.lang.StashObjectConvert._
 
 /**
- * @summary
+ * The main handler implementation for the memcached protocol
+ *
+ * @param storage The storage backend to use for data persistance
  */
 class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
 
@@ -61,6 +63,8 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
 
     /**
      * Handler for the memcache version command
+     *
+     * @param response The response to build
      */
     private def command_version(response: StashResponse) = {
         response.write("VERSION " + Application.Version)
@@ -68,6 +72,8 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
 
     /**
      * Handler for the memcache flush command
+     *
+     * @param response The response to build
      */
     private def command_flush(response: StashResponse) = {
         storage.clear
@@ -77,6 +83,9 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
 
     /**
      * Handler for the memcache get keys command
+     *
+     * @param request The request to process
+     * @param response The response to build
      */
     private def command_get(request:StashRequest, response: StashResponse) = {
         statistic.increment("cmd_get", 1)
@@ -96,6 +105,9 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
 
     /**
      * Handler for the memcache key set command
+     *
+     * @param request The request to process
+     * @param response The response to build
      */
     private def command_set(request:StashRequest, response: StashResponse) = {
         var stored = true
@@ -124,6 +136,9 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
 
     /**
      * Handler for the memcache key alter command
+     *
+     * @param request The request to process
+     * @param response The response to build
      */
     private def command_alter(request:StashRequest, response: StashResponse) = {
         statistic.increment("cmd_set", 1)
@@ -158,6 +173,9 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
 
     /**
      * Handler for the memcache delete command
+     *
+     * @param request The request to process
+     * @param response The response to build
      */
     private def command_delete(request:StashRequest, response: StashResponse) = {
         storage.get(request.key) match {
@@ -175,6 +193,9 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
 
     /**
      * Handler for the memcache key increment/decrement commands
+     *
+     * @param request The request to process
+     * @param response The response to build
      */
     private def command_increment(request:StashRequest, response: StashResponse) = {
         def int(array:Array[Byte]) = new String(array).toInt
@@ -196,6 +217,8 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
 
     /**
      * Handler for the memcache get statistics command
+     *
+     * @param response The response to build
      */
     private def command_statistic(response: StashResponse) = {
         def stat(key:String, value:Any) {

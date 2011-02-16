@@ -7,12 +7,23 @@ import org.apache.mina.filter.codec.demux.MessageDecoderAdapter
 import org.apache.mina.filter.codec.demux.MessageDecoderResult
 
 /**
- * @summary
+ * Mina message decoder implementation for the memcached
+ * protocol.
  */
 class StashRequestDecoder extends MessageDecoderAdapter {
 
+    /**
+     * The unique identifier used to retrieve session data
+     */
     private val identifier = "stash-session-data"
 
+    /**
+     * Mina implementation to see if the request is decodeable
+     *
+     * @param session The current context for this session
+     * @param buffer The current receieve buffer for this session
+     * @return The MessageDecoderResult.{NEED_DATA or OK}
+     */
     def decodable(session:IoSession, buffer:IoBuffer)
         : MessageDecoderResult = {
 
@@ -21,6 +32,15 @@ class StashRequestDecoder extends MessageDecoderAdapter {
             MessageDecoderResult.NEED_DATA else MessageDecoderResult.OK
     }
 
+    /**
+     * Mina implementation to decode the request
+     *
+     * @param session The current context for this session
+     * @param buffer The current receieve buffer for this session
+     * @param output The buffer to send the output result
+     * @throws Exception
+     * @return The MessageDecoderResult.{NEED_DATA or OK}
+     */
     @throws(classOf[Exception])
     def decode(session:IoSession, buffer:IoBuffer, output:ProtocolDecoderOutput)
         : MessageDecoderResult = {
@@ -41,14 +61,27 @@ class StashRequestDecoder extends MessageDecoderAdapter {
     }
 }
 
+/**
+ * Factory used to decode the memcached commands into
+ * valid StashRequest instances.
+ */
 object StashRequestDecoder {
 
+    /**
+     * The list of currently supported commands
+     */
     val commands = List(
         "SET", "ADD", "INCR", "DECR",
         "APPEND", "PREPEND", "REPLACE",
         "GET", "GETS", "STATS", "DELETE", "CAS",
         "QUIT", "VERSION", "ERROR", "FLUSH_ALL")
 
+    /**
+     * Used to parse the incoming memcached request
+     *
+     * @param line The line to decode
+     * @return The decoded StashRequest
+     */
     def parse(line:String) : StashRequest = {
         var request = new StashRequest()
         val pieces  = line.split(" ").map { _.trim }
@@ -60,7 +93,7 @@ object StashRequestDecoder {
                 request.flags   = pieces(2).toInt
                 request.expire  = pieces(3).toLong
                 request.bytes   = pieces(4).getBytes
-                request.reply   = pieces.contains("noreply")
+                request.reply   = shouldReply(pieces)
             }
             case cmd @ ("INCR" | "DECR") => {
                 request.command = cmd
@@ -70,7 +103,7 @@ object StashRequestDecoder {
             }
             case cmd @ ("GET" | "GETS") => {
                 request.command = cmd
-                request.options = pieces.tail
+                request.options = pieces.tail.toList
             }
             case cmd @ ("DELETE") => {
                 request.command = cmd
@@ -87,6 +120,12 @@ object StashRequestDecoder {
         return request
     }
 
+    /**
+     * Helper method used to determine if a command should reply
+     *
+     * @param commands Commands to search for the noreply flag
+     * @return true if we should reply, false otherwise
+     */
     private def shouldReply(commands:Array[String]) =
-        commands.last.toLowerCase.equals("noreply")
+        ! commands.last.toLowerCase.equals("noreply")
 }

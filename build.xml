@@ -9,7 +9,7 @@
   <property name="jar.dir"    location="jar"/>
   <property name="lib.dir"    location="lib"/>
   <property name="docs.dir"   location="${build.dir}/docs"/>
-  <property name="main.class" value="org.stash.MemStashServer"/>
+  <property name="main.class" value="org.stash.Application"/>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- define the global classpath -->
@@ -56,7 +56,7 @@
       <zipfileset src="${lib.dir}/slf4j-simple-1.6.1.jar" />
 
       <manifest>
-        <attribute name="Main-Class" value="org.stash.Application" />
+        <attribute name="Main-Class" value="${main.class}" />
       </manifest>
     </jar>
   </target>
