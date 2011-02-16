@@ -64,6 +64,7 @@ object Application {
         options.addOption("a", "address", true, "set the address to listen on")
         options.addOption("t", "threads", true, "set the number of threads to use")
         options.addOption("u", "udp", true, "set to enable the udp interface")
+        options.addOption("b", "binding", true, "set the default protocol type")
     }
 
     /**
@@ -75,7 +76,8 @@ object Application {
         "address" -> null,
         "port"    -> "11211",
         "udp"     -> false,
-        "threads" -> (StashSystem.cpus + 1)
+        "threads" -> (StashSystem.cpus + 1),
+        "binding" -> 'binary
     )
 
     /**

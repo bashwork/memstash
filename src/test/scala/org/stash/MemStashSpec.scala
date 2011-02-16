@@ -3,7 +3,6 @@ package org.stash
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 
-class  MemStashBinarySpec extends FlatSpec
+class  MemStashSpec extends FlatSpec
     with ShouldMatchers {
 }
-
