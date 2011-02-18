@@ -32,6 +32,7 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
         val request = message.asInstanceOf[StashRequest]
         val response = new StashResponse()
 
+        logger.debug("Command: ", request.command)
         request.command match {
             case "FLUSH_ALL"   => command_flush(response)
             case "ERROR"       => response.write("ERROR")

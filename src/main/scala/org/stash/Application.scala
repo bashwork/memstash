@@ -44,7 +44,7 @@ object Application {
         implicit def _atos(a:Any) = a.asInstanceOf[String]
         implicit def _atoi(a:Any) = a.toString.toInt
 
-        val memcached = new MemStashAscii(defaults("address"),
+        val memcached = new MemStash(defaults("address"),
             defaults("port"), defaults("threads"), new HashMapStorage())
         logger.info("Starting memstash on {}:{}", defaults("address"), defaults("port"))
         memcached.startBlocking

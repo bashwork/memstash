@@ -14,24 +14,30 @@ import org.stash.protocol.{StashCodecFactory, StashHandler}
 
 
 /**
- * 
+ * The main mina protocol manager
  */
-class MemStashAscii(val address:String, val port:Int, val threads:Int, val storage:StashStorage) {
+class MemStash(val address:String, val port:Int, val threads:Int, val storage:StashStorage) {
 
     private val acceptor = new NioSocketAcceptor()
 
-    def startBlocking = {
+    /**
+     * Start the memstash application and block forever
+     */
+    def startBlocking : Unit = {
         start
         do { Thread.sleep(3000) } while(true)
     }
 
-    def start = {
+    /**
+     * Start the memstash application
+     */
+    def start : Unit = {
         acceptor.setBacklog(1000)
 
         val chain = acceptor.getFilterChain()
 
         chain.addLast("logger", new LoggingFilter());
-        chain.addLast("codec", new ProtocolCodecFilter(new TextLineCodecFactory()));
+        chain.addLast("codec", new ProtocolCodecFilter(new StashCodecFactory()));
 
         val config = acceptor.getSessionConfig()
         config.setSendBufferSize(1024000);
@@ -49,6 +55,9 @@ class MemStashAscii(val address:String, val port:Int, val threads:Int, val stora
         acceptor.bind(sockaddress);
     }
 
-    def stop = acceptor.unbind
+    /**
+     * Stop the memstash application
+     */
+    def stop : Unit = acceptor.unbind
 }
 

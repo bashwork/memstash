@@ -61,6 +61,7 @@ class StashRequestDecoder extends MessageDecoderAdapter {
             }
             case null => {
                 buffer.mark // set current buffer position
+
                 do {
                     val c = buffer.get.asInstanceOf[Char]
                     stream.write(c)
@@ -72,10 +73,11 @@ class StashRequestDecoder extends MessageDecoderAdapter {
                         return MessageDecoderResult.OK
                     }
                 } while (buffer.hasRemaining)
+       
+                buffer.reset // force re-read of buffer
             }
         }
-       
-        buffer.reset // force re-read of buffer
+
         MessageDecoderResult.NEED_DATA
     }
 }
@@ -83,6 +85,8 @@ class StashRequestDecoder extends MessageDecoderAdapter {
 /**
  * Factory used to decode the memcached commands into
  * valid StashRequest instances.
+ *
+ * TODO make this the Ascii decoder and make a binary one
  */
 object StashRequestDecoder {
 
