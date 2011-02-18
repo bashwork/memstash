@@ -45,76 +45,76 @@ class  StashRequestDecoderSpec extends FlatSpec
 
     it should "process GET command" in {
         StashRequestDecoder.parse("GET key") should have (
-            command ("GET"), options (List("key")), reply (true))
+            command ("GET"), extra (List("key")), reply (true))
         StashRequestDecoder.parse("GET key1 key2 key3") should have (
-            command ("GET"), options (List("key1","key2","key3")), reply (true))
+            command ("GET"), extra (List("key1","key2","key3")), reply (true))
     }
 
     it should "process GETS command" in {
         StashRequestDecoder.parse("GETS key1 key2 key3") should have (
-            command ("GETS"), options (List("key1","key2","key3")), reply (true))
+            command ("GETS"), extra (List("key1","key2","key3")), reply (true))
         StashRequestDecoder.parse("GETS key") should have (
-            command ("GETS"), options (List("key")), reply (true))
+            command ("GETS"), extra (List("key")), reply (true))
     }
 
     it should "process INCR command" in {
         StashRequestDecoder.parse("INCR key") should have (
-            command ("INCR"), bytes ("1".getBytes), reply (true))
+            command ("INCR"), data ("1".getBytes), reply (true))
         StashRequestDecoder.parse("INCR key 22") should have (
-            command ("INCR"), bytes ("22".getBytes), reply (true))
+            command ("INCR"), data ("22".getBytes), reply (true))
         StashRequestDecoder.parse("INCR key 1 noreply") should have (
-            command ("INCR"), bytes ("1".getBytes), reply (false))
+            command ("INCR"), data ("1".getBytes), reply (false))
     }
 
     it should "process DECR command" in {
         StashRequestDecoder.parse("DECR key") should have (
-            command ("DECR"), bytes ("1".getBytes), reply (true))
+            command ("DECR"), data ("1".getBytes), reply (true))
         StashRequestDecoder.parse("DECR key 22") should have (
-            command ("DECR"), bytes ("22".getBytes), reply (true))
+            command ("DECR"), data ("22".getBytes), reply (true))
         StashRequestDecoder.parse("DECR key 1 noreply") should have (
-            command ("DECR"), bytes ("1".getBytes), reply (false))
+            command ("DECR"), data ("1".getBytes), reply (false))
     }
 
     it should "process SET command" in {
-        StashRequestDecoder.parse("SET key 1 1 value") should have (
-            command ("SET"), flags(1), expire(1), bytes ("value".getBytes), reply (true))
-        StashRequestDecoder.parse("SET key 1 1 value noreply") should have (
-            command ("SET"), flags(1), expire(1), bytes ("value".getBytes), reply (false))
+        StashRequestDecoder.parse("SET key 1 1 1000") should have (
+            command ("SET"), flags(1), expire(1), size (1000), reply (true))
+        StashRequestDecoder.parse("SET key 1 1 1000 noreply") should have (
+            command ("SET"), flags(1), expire(1), size (1000), reply (false))
     }
 
     it should "process ADD command" in {
-        StashRequestDecoder.parse("ADD key 1 1 value") should have (
-            command ("ADD"), flags(1), expire(1), bytes ("value".getBytes), reply (true))
-        StashRequestDecoder.parse("ADD key 1 1 value noreply") should have (
-            command ("ADD"), flags(1), expire(1), bytes ("value".getBytes), reply (false))
+        StashRequestDecoder.parse("ADD key 1 1 1000") should have (
+            command ("ADD"), flags(1), expire(1), size (1000), reply (true))
+        StashRequestDecoder.parse("ADD key 1 1 1000 noreply") should have (
+            command ("ADD"), flags(1), expire(1), size (1000), reply (false))
     }
 
     it should "process REPLACE command" in {
-        StashRequestDecoder.parse("REPLACE key 1 1 value") should have (
-            command ("REPLACE"), flags(1), expire(1), bytes ("value".getBytes), reply (true))
-        StashRequestDecoder.parse("REPLACE key 1 1 value noreply") should have (
-            command ("REPLACE"), flags(1), expire(1), bytes ("value".getBytes), reply (false))
+        StashRequestDecoder.parse("REPLACE key 1 1 1000") should have (
+            command ("REPLACE"), flags(1), expire(1), size (1000), reply (true))
+        StashRequestDecoder.parse("REPLACE key 1 1 1000 noreply") should have (
+            command ("REPLACE"), flags(1), expire(1), size (1000), reply (false))
     }
 
     it should "process PREPEND command" in {
-        StashRequestDecoder.parse("PREPEND key 1 1 value") should have (
-            command ("PREPEND"), flags(1), expire(1), bytes ("value".getBytes), reply (true))
-        StashRequestDecoder.parse("PREPEND key 1 1 value noreply") should have (
-            command ("PREPEND"), flags(1), expire(1), bytes ("value".getBytes), reply (false))
+        StashRequestDecoder.parse("PREPEND key 1 1 1000") should have (
+            command ("PREPEND"), flags(1), expire(1), size (1000), reply (true))
+        StashRequestDecoder.parse("PREPEND key 1 1 1000 noreply") should have (
+            command ("PREPEND"), flags(1), expire(1), size (1000), reply (false))
     }
 
     it should "process APPEND command" in {
-        StashRequestDecoder.parse("APPEND key 1 1 value") should have (
-            command ("APPEND"), flags(1), expire(1), bytes ("value".getBytes), reply (true))
-        StashRequestDecoder.parse("APPEND key 1 1 value noreply") should have (
-            command ("APPEND"), flags(1), expire(1), bytes ("value".getBytes), reply (false))
+        StashRequestDecoder.parse("APPEND key 1 1 1000") should have (
+            command ("APPEND"), flags(1), expire(1), size (1000), reply (true))
+        StashRequestDecoder.parse("APPEND key 1 1 1000 noreply") should have (
+            command ("APPEND"), flags(1), expire(1), size (1000), reply (false))
     }
 
     it should "process CAS command" in { // TODO options for cas
-        StashRequestDecoder.parse("CAS key 1 1 value") should have (
-            command ("CAS"), flags(1), expire(1), bytes ("value".getBytes), reply (true))
-        StashRequestDecoder.parse("CAS key 1 1 value noreply") should have (
-            command ("CAS"), flags(1), expire(1), bytes ("value".getBytes), reply (false))
+        StashRequestDecoder.parse("CAS key 1 1 1000") should have (
+            command ("CAS"), flags(1), expire(1), size (1000), reply (true))
+        StashRequestDecoder.parse("CAS key 1 1 1000 noreply") should have (
+            command ("CAS"), flags(1), expire(1), size (1000), reply (false))
     }
 }
 

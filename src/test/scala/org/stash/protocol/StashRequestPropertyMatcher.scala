@@ -35,15 +35,21 @@ trait StashRequestPropertyMatchers {
     }
     def expire(expected:Long) = new ExpireMatcher(expected)
 
-    class OptionsMatcher(expected: Any) extends HavePropertyMatcher[StashRequest, Any] {
+    class ExtraMatcher(expected: Any) extends HavePropertyMatcher[StashRequest, Any] {
         def apply(request: StashRequest) =
-            new HavePropertyMatchResult(request.options == expected, "options", expected, request.options)
+            new HavePropertyMatchResult(request.extra == expected, "extra", expected, request.extra)
     }
-    def options(expected:Any) = new OptionsMatcher(expected)
+    def extra(expected:Any) = new ExtraMatcher(expected)
 
-    class BytesMatcher(expected: Array[Byte]) extends HavePropertyMatcher[StashRequest, Array[Byte]] {
+    class SizeMatcher(expected: Int) extends HavePropertyMatcher[StashRequest, Int] {
         def apply(request: StashRequest) =
-            new HavePropertyMatchResult(request.bytes.toList == expected.toList, "bytes", expected, request.bytes)
+            new HavePropertyMatchResult(request.size == expected, "size", expected, request.size)
     }
-    def bytes(expected:Array[Byte]) = new BytesMatcher(expected)
+    def size(expected:Int) = new SizeMatcher(expected)
+
+    class DataMatcher(expected: Array[Byte]) extends HavePropertyMatcher[StashRequest, Array[Byte]] {
+        def apply(request: StashRequest) =
+            new HavePropertyMatchResult(request.data.toList == expected.toList, "data", expected, request.data)
+    }
+    def data(expected:Array[Byte]) = new DataMatcher(expected)
 }

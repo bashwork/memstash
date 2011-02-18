@@ -23,8 +23,8 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
 
     @throws(classOf[Exception])
     override def exceptionCaught(session:IoSession, cause:Throwable) = {
-        logger.error(cause.toString());
-        session.close(true);
+        logger.error(cause.toString())
+        session.close(true)
     }
 
     @throws(classOf[Exception])
@@ -45,18 +45,18 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
             case "QUIT"        => session.close(true)
         }
 
-        session.write(response);
+        session.write(response)
     }
 
     @throws(classOf[Exception])
     override def sessionClosed(session:IoSession) = {
-        logger.info("Session Closed", session.getRemoteAddress);
+        logger.info("Session Closed", session.getRemoteAddress)
         statistic.decrement("curr_connections", 1)
     }
 
     @throws(classOf[Exception])
     override def sessionOpened(session:IoSession) = {
-        logger.info("Session Opened", session.getRemoteAddress);
+        logger.info("Session Opened", session.getRemoteAddress)
         statistic.increment("curr_connections", 1)
         statistic.increment("total_connections", 1)
     }
@@ -89,18 +89,19 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
      */
     private def command_get(request:StashRequest, response: StashResponse) = {
         statistic.increment("cmd_get", 1)
-        storage.get(request.key) match {
-            case el:StashObject => {
-                statistic.increment("get_hits", 1)
-                statistic.increment("bytes_read", el.size)
-                val value = storage.get(request.key)
-                response.write("DELETED")
-            }
-            case null => {
-                statistic.increment("get_misses", 1)
-                response.write("NOT_FOUND")
+        request.extra.foreach { key:String =>
+            storage.get(key) match {
+                case el:StashObject => {
+                    statistic.increment("get_hits", 1)
+                    statistic.increment("bytes_read", el.size)
+                    // TODO CAS
+                    response.write("VALUE " + el.key + " " + el.flags + " " + el.size)
+                    response.write(el.bytes)
+                }
+                case null => statistic.increment("get_misses", 1)
             }
         }
+        response.write("END")
     }
 
     /**

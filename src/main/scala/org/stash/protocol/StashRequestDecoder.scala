@@ -1,5 +1,6 @@
 package org.stash.protocol
 
+import java.io.ByteArrayOutputStream
 import org.apache.mina.core.session.IoSession
 import org.apache.mina.core.buffer.IoBuffer
 import org.apache.mina.filter.codec.ProtocolDecoderOutput
@@ -45,19 +46,37 @@ class StashRequestDecoder extends MessageDecoderAdapter {
     def decode(session:IoSession, buffer:IoBuffer, output:ProtocolDecoderOutput)
         : MessageDecoderResult = {
 
-        var result = MessageDecoderResult.NEED_DATA
+        val stream = new ByteArrayOutputStream(50)
 
         session.getAttribute(identifier) match {
             case request:StashRequest => {
-                result = MessageDecoderResult.OK
+                if (buffer.remaining > request.size) {
+                    request.more = false // no more data to get
+                    request.data = new Array[Byte](request.size)
+                    buffer.get(request.data)
+                    session.setAttribute(identifier, null)
+                    output.write(request)
+                    return MessageDecoderResult.OK
+                }
             }
             case null => {
-                result = MessageDecoderResult.OK
+                buffer.mark // set current buffer position
+                do {
+                    val c = buffer.get.asInstanceOf[Char]
+                    stream.write(c)
+                    if (c == '\r' && buffer.hasRemaining && buffer.get == '\n') {
+                        stream.close
+                        val request = StashRequestDecoder.parse(stream.toString)
+                        if (request.more) session.setAttribute(identifier, request)
+                        else output.write(request)
+                        return MessageDecoderResult.OK
+                    }
+                } while (buffer.hasRemaining)
             }
         }
        
-        buffer.reset 
-        result
+        buffer.reset // force re-read of buffer
+        MessageDecoderResult.NEED_DATA
     }
 }
 
@@ -92,18 +111,19 @@ object StashRequestDecoder {
                 request.key     = pieces(1)
                 request.flags   = pieces(2).toInt
                 request.expire  = pieces(3).toLong
-                request.bytes   = pieces(4).getBytes
+                request.size    = pieces(4).toInt
                 request.reply   = shouldReply(pieces)
+                request.more    = true
             }
             case cmd @ ("INCR" | "DECR") => {
                 request.command = cmd
                 request.key     = pieces(1)
-                request.bytes   = pieces.lift(2).getOrElse("1").getBytes
+                request.data    = pieces.lift(2).getOrElse("1").getBytes
                 request.reply   = shouldReply(pieces)
             }
             case cmd @ ("GET" | "GETS") => {
                 request.command = cmd
-                request.options = pieces.tail.toList
+                request.extra   = pieces.tail.toList
             }
             case cmd @ ("DELETE") => {
                 request.command = cmd

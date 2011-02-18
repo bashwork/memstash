@@ -1,12 +1,18 @@
-* full protocol
 * tcp/udp protocol
+  - concurrently (mina, netty)
 * binary/ascii protocol
+  - concurrently
 * actors
+  - each request
 * valid key -> 250 characters, no control or whitespace
+  - validate
 * max expire time is 60*60*24*30, otherwise is seconds since unit epoch
+  - cleanup actor
 
 * ERROR\r\n
 * CLIENT_ERROR <error>\r\n
 * SERVER_ERROR <error>\r\n & close connection
 
-* undercover code coverage
+* undercover/scct code coverage -> 100% coverage
+* spring integration
+* backend storage (redis, db, memcached, file)

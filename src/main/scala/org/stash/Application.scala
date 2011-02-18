@@ -7,7 +7,6 @@ import org.stash.lang.StashSystem
 import org.stash.storage.HashMapStorage
 import org.stash.protocol.{StashCodecFactory, StashHandler}
 
-
 /**
  * The main launcher script for the service. This parses the following
  * command line options:

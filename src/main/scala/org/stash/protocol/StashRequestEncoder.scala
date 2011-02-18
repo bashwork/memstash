@@ -19,7 +19,7 @@ class StashRequestEncoder extends MessageEncoder[StashRequest] {
     @throws(classOf[Exception])
     def encode(session:IoSession, request:StashRequest, output:ProtocolEncoderOutput) = {
         val buffer = IoBuffer.allocate(request.size)
-        buffer.put(request.bytes)
+        buffer.put(request.data)
         buffer.flip
         if (buffer.capacity > 0) output.write(buffer)
     }

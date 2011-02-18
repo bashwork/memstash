@@ -15,7 +15,7 @@ object StashObjectConvert {
      */
     implicit def fromStashRequest(en: StashRequest) : StashObject = {
         val result   = new StashObject(en.key, en.flags, en.expire, en.size)
-        result.bytes = en.bytes
+        result.bytes = en.data
         result.size  = en.size
         result
     }
