@@ -107,6 +107,13 @@
     <delete dir="${jar.dir}"/>
   </target>
 
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- clean up the build -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="tidy" depends="compile" description="cleans up the tree" >
+    <delete dir="${lib.dir}"/>
+  </target>
+
 </project>
 
 
