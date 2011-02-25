@@ -37,6 +37,7 @@
   <import file="test.xml" />
   <import file="docs.xml" />
   <import file="package.xml" />
+  <import file="run.xml" />
 
 </project>
 

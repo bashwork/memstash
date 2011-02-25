@@ -8,6 +8,7 @@ import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
+import org.slf4j.{Logger, LoggerFactory}
 
 import org.stash.storage.StashStorage
 import org.stash.protocol.{StashCodecFactory, StashHandler}
@@ -19,12 +20,14 @@ import org.stash.protocol.{StashCodecFactory, StashHandler}
 class MemStash(val address:String, val port:Int, val threads:Int, val storage:StashStorage) {
 
     private val acceptor = new NioSocketAcceptor()
+    private val logger = LoggerFactory.getLogger(this.getClass)
 
     /**
      * Start the memstash application and block forever
      */
     def startBlocking : Unit = {
         start
+        logger.info("Blocking main thread")
         do { Thread.sleep(3000) } while(true)
     }
 
@@ -32,6 +35,8 @@ class MemStash(val address:String, val port:Int, val threads:Int, val storage:St
      * Start the memstash application
      */
     def start : Unit = {
+        //val executors = Executors.newCachedThreadPool()
+        //acceptor = new NioSocketAcceptor(executor, new NioProcessor(executor))
         acceptor.setBacklog(1000)
 
         val chain = acceptor.getFilterChain()
@@ -53,6 +58,7 @@ class MemStash(val address:String, val port:Int, val threads:Int, val storage:St
 
         acceptor.setHandler(new StashHandler(storage));
         acceptor.bind(sockaddress);
+        logger.info("Starting memstash on {}", sockaddress)
     }
 
     /**

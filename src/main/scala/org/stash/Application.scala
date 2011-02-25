@@ -1,7 +1,6 @@
 package org.stash;
 
 import org.apache.commons.cli._
-import org.slf4j.{Logger, LoggerFactory}
 
 import org.stash.lang.StashSystem
 import org.stash.storage.HashMapStorage
@@ -20,7 +19,6 @@ import org.stash.protocol.{StashCodecFactory, StashHandler}
 object Application {
 
     val Version = "1.0.0"
-    private val logger = LoggerFactory.getLogger(this.getClass)
 
     /**
      * Main program start
@@ -46,7 +44,6 @@ object Application {
 
         val memcached = new MemStash(defaults("address"),
             defaults("port"), defaults("threads"), new HashMapStorage())
-        logger.info("Starting memstash on {}:{}", defaults("address"), defaults("port"))
         memcached.startBlocking
     }
 
