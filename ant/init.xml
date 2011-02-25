@@ -1,0 +1,19 @@
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- retrieves all the dependencies using ivy -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="resolve" description="retrieve all the project dependencies">
+    <mkdir dir="${lib.dir}" />
+    <ivy:retrieve />
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- perform any initialization -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="init" description="initilze the system" >
+    <taskdef resource="scala/tools/ant/antlib.xml" classpathref="classpath" />
+  </target>
+
+
+</project>
