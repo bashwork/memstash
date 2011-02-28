@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant" name="memstash" default="package" basedir=".">
+<project xmlns:ivy="antlib:fr.jayasoft.ivy.ant" name="memstash" default="package">
   <description>Memcache in scala on the JVM</description>
-
-  <property name="ivy.settings.file" value="${basedir}/ivy/ivysettings.xml"/>
   <import file="${basedir}/ant/bootstrap.xml" />
 </project>
 

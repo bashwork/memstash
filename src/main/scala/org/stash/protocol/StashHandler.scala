@@ -21,18 +21,32 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
     private val logger = LoggerFactory.getLogger(this.getClass)
     private val statistic = new StashStatistics()
 
+    /**
+     * Handler for an uncaught exception in the service layer
+     *
+     * @param session The current session for this user
+     * @param cause The exception that was thrown
+     * @throws Exception
+     */
     @throws(classOf[Exception])
     override def exceptionCaught(session:IoSession, cause:Throwable) = {
         logger.error(cause.toString())
         session.close(true)
     }
 
+    /**
+     * Handler for a closing session
+     *
+     * @param session The current session for this user
+     * @param message The new message to process
+     * @throws Exception
+     */
     @throws(classOf[Exception])
     override def messageReceived(session:IoSession, message:Object) = {
         val request = message.asInstanceOf[StashRequest]
         val response = new StashResponse()
 
-        logger.debug("Command: ", request.command)
+        logger.info("Command: " + request.command)
         request.command match {
             case "FLUSH_ALL"   => command_flush(response)
             case "ERROR"       => response.write("ERROR")
@@ -49,15 +63,27 @@ class StashHandler(val storage:StashStorage) extends IoHandlerAdapter {
         session.write(response)
     }
 
+    /**
+     * Handler for a closing session
+     *
+     * @param session The current session for this user
+     * @throws Exception
+     */
     @throws(classOf[Exception])
     override def sessionClosed(session:IoSession) = {
-        logger.info("Session Closed", session.getRemoteAddress)
+        logger.info("Session Closed: " + session.getRemoteAddress)
         statistic.decrement("curr_connections", 1)
     }
 
+    /**
+     * Handler for a new connected session
+     *
+     * @param session The current session for this user
+     * @throws Exception
+     */
     @throws(classOf[Exception])
     override def sessionOpened(session:IoSession) = {
-        logger.info("Session Opened", session.getRemoteAddress)
+        logger.info("Session Opened: " + session.getRemoteAddress)
         statistic.increment("curr_connections", 1)
         statistic.increment("total_connections", 1)
     }

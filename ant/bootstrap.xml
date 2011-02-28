@@ -23,10 +23,6 @@
     <fileset dir="${lib.dir}" includes="**/*.jar"/>
   </path>
 
-  <!--taskdef resource="scala/tools/ant/antlib.xml" classpathref="classpath" />
-    <classpath refid="classpath"/>
-  </taskdef-->
-
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- import our various commands -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

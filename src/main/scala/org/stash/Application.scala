@@ -1,4 +1,4 @@
-package org.stash;
+package org.stash
 
 import org.apache.commons.cli._
 
@@ -35,15 +35,13 @@ object Application {
               case "t" | "threads"  => defaults += ("threads" -> o.getValue())
               case "p" | "port"     => defaults += ("port"    -> o.getValue())
               case "a" | "address"  => defaults += ("address" -> o.getValue())
+              case "l" | "logging"  => defaults += ("loggin"  -> o.getValue())
               case "v" | "version"  => printVersion
               case "h" | "help" | _ => printHelp(options)
           }
         }
-        implicit def _atos(a:Any) = a.asInstanceOf[String]
-        implicit def _atoi(a:Any) = a.toString.toInt
 
-        val memcached = new MemStash(defaults("address"),
-            defaults("port"), defaults("threads"), new HashMapStorage())
+        val memcached = new MemStash(defaults, new HashMapStorage())
         memcached.startBlocking
     }
 
@@ -61,6 +59,7 @@ object Application {
         options.addOption("t", "threads", true, "set the number of threads to use")
         options.addOption("u", "udp", true, "set to enable the udp interface")
         options.addOption("b", "binding", true, "set the default protocol type")
+        options.addOption("l", "logging", true, "set the level of logging to use")
     }
 
     /**
@@ -71,6 +70,7 @@ object Application {
     private def createDefaults() = Map[String,Any](
         "address" -> null,
         "port"    -> "11211",
+        "logging" -> "info",
         "udp"     -> false,
         "threads" -> (StashSystem.cpus + 1),
         "binding" -> 'binary

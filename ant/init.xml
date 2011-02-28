@@ -1,6 +1,15 @@
 <project xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- get and install ivy -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name="download-ivy" description="retrieve ivy installation">
+  </target>
+
+  <target name="install-ivy" description="install the new ivy download">
+  </target>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- retrieves all the dependencies using ivy -->
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <target name="resolve" description="retrieve all the project dependencies">
@@ -14,6 +23,5 @@
   <target name="init" description="initilze the system" >
     <taskdef resource="scala/tools/ant/antlib.xml" classpathref="classpath" />
   </target>
-
 
 </project>
